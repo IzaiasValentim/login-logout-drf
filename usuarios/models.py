@@ -13,3 +13,12 @@ class Usuario(AbstractUser):
           fotos e controle da transparência dos investimentos.
 
       """
+    nome_completo = models.CharField(max_length=100, null=False, blank=False)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_atualizacao = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Usuarios'
+
+    def __str__(self):
+        return f'{self.username} - {self.email}'
