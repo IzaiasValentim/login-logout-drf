@@ -36,6 +36,6 @@ urlpatterns = [
 
                   # Acesso do usuário:
                   path('login/', LoginUsuario.as_view(), name='login-usuário'),
-                  path('logout/', LogoutUsuario.as_view(), name='login-usuário'),
+                  path('logout/', LogoutUsuario.as_view(), name='logout-usuário'),
                   path('user/', UsuarioPageView.as_view(), name='page-user'),
               ] + router.urls
