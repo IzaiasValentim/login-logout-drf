@@ -16,7 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+
+# Roteador para rotas do ModelViewSet
+from rest_framework.routers import SimpleRouter
+from usuarios.api.views import UsuarioViewSet
+
+# Views para o Swagger
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+router = SimpleRouter()
+router.register('usuarios', UsuarioViewSet, basename='usuarios-views')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +35,4 @@ urlpatterns = [
     path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
 
-]
+]+router.urls
