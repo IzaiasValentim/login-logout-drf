@@ -19,7 +19,7 @@ from django.urls import path
 
 # Roteador para rotas do ModelViewSet
 from rest_framework.routers import SimpleRouter
-from usuarios.api.views import UsuarioViewSet
+from usuarios.api.views import UsuarioViewSet, UsuarioPageView, LoginUsuario, LogoutUsuario
 
 # Views para o Swagger
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -28,11 +28,14 @@ router = SimpleRouter()
 router.register('usuarios', UsuarioViewSet, basename='usuarios-views')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+                  path('admin/', admin.site.urls),
 
-    # Swagger:
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+                  # Swagger:
+                  path('schema/', SpectacularAPIView.as_view(), name='schema'),
+                  path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
-
-]+router.urls
+                  # Acesso do usuário:
+                  path('login/', LoginUsuario.as_view(), name='login-usuário'),
+                  path('logout/', LogoutUsuario.as_view(), name='login-usuário'),
+                  path('user/', UsuarioPageView.as_view(), name='page-user'),
+              ] + router.urls
