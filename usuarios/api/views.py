@@ -1,12 +1,13 @@
 from django.contrib.auth import login, logout
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serilizers import UsuarioSerializer, LoginSerializer
+from .serilizers import UsuarioSerializer, LoginSerializer, UsuarioPageSerializer
 from ..models import Usuario
 
 
@@ -21,7 +22,9 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 class LoginUsuario(APIView):
     permission_classes = [AllowAny, ]
     authentication_classes = [SessionAuthentication, ]
+    serializer_class = LoginSerializer
 
+    @extend_schema(request=LoginSerializer)
     def post(self, request):
         data = request.data
         serializer_login = LoginSerializer(data=data)
@@ -32,7 +35,8 @@ class LoginUsuario(APIView):
 
 
 class LogoutUsuario(APIView):
-    permission_classes = [AllowAny, ]
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [SessionAuthentication, ]
 
     def post(self, request):
         usuario = request.user
@@ -43,3 +47,11 @@ class LogoutUsuario(APIView):
             return Response({'Inválido': 'Não há uma sessão ativa'}, status=status.HTTP_200_OK)
 
 
+class UsuarioPageView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [SessionAuthentication, ]
+    serializer_class = UsuarioPageSerializer
+
+    def get(self, request):
+        serializer = UsuarioPageSerializer(request.user)
+        return Response({"Área": "Acesso do usuário", "usuário": serializer.data}, status=status.HTTP_200_OK)
