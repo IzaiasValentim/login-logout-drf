@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     # DRF
     'rest_framework',
     # Swagger-UI
-    'drf-spectacular',
+    'drf_spectacular',
     # Meus aplicativos:
     'usuarios',
 ]
@@ -115,6 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Usuário considerado no projeto:
 
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
