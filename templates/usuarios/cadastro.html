@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            padding-right: 45px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-container {
+            text-align: center;
+
+        }
+
+        #btn-enviar {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-link {
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+<div class="container">
+
+    <h2>Cadastro de Usuário</h2>
+    <form id="registration-form">
+        <div class="form-group">
+            <label for="nome_completo">Nome Completo</label>
+            <input type="text" name="nome_completo" id="nome_completo" required>
+        </div>
+        <div class="form-group">
+            <label for="username">Nome de Usuário</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" name="email" id="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <div class="btn-container">
+            <input type="button" id="btn-enviar" value="Registrar" onclick="registrarUsuario()">
+            <input type="button" id="btn-login" value="Login" onclick="redirect_login()">
+        </div>
+    </form>
+    <div id="mensagem"></div>
+    <div class="back-link">
+        <a href="http://localhost:3000/login/">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+</div>
+<script>
+
+    function obter_csrf_token() {
+        // Obter todos os cookies do navegador
+        let cookies = document.cookie;
+
+        // Dividir a string de cookies em pares chave-valor
+        let cookiesArray = cookies.split(";");
+
+        // Iterar sobre os pares chave-valor
+        for (let i = 0; i < cookiesArray.length; i++) {
+            let cookie = cookiesArray[i].trim();
+            // Verificar se o cookie começa com 'csrftoken'
+            if (cookie.indexOf("csrftoken=") === 0) {
+                // Extrair o valor do csrf_token
+                // Retornar o valor do csrf_token
+                return cookie.substring("csrftoken=".length, cookie.length);
+            }
+        }
+
+        // Se o csrf_token não for encontrado, retornar null ou lançar um erro.
+        return null;
+    }
+
+    function registrarUsuario() {
+
+        let nome_completo = document.getElementById('nome_completo').value;
+        let username = document.getElementById('username').value;
+        let email = document.getElementById('email').value;
+        let password = document.getElementById('password').value;
+
+        let data = {
+            "nome_completo": nome_completo,
+            "username": username,
+            "email": email,
+            "password": password
+        };
+
+        let token_csrftoken = obter_csrf_token();
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost:3000/usuarios/", true);
+        xhr.setRequestHeader("X-CSRFToken", token_csrftoken);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 201) {
+                    document.getElementById('mensagem').innerText = "Registro bem-sucedido!";
+                } else {
+                    document.getElementById('mensagem').innerText = "Erro no registro.";
+                }
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    }
+
+    function redirect_login() {
+        window.location.assign("http://localhost:3000/login")
+    }
+
+    /*
+        -> Para realizar uma requisição futura
+        function realizarSolicitacaoProtegida() {
+        var token = localStorage.getItem('token');
+
+        if (token) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:3000/sua-rota-protegida", true);
+            xhr.setRequestHeader("Authorization", "Token " + token);
+
+            xhr.onreadystatechange = function () {
+                // Lógica de tratamento da resposta...
+            };
+            xhr.send();
+        } else {
+            // Lidar com a ausência de token...
+        }
+        }
+    */
+</script>
+</body>
+
+</html>
