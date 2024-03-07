@@ -1,6 +1,6 @@
 from django.contrib.auth import login, logout
 from drf_spectacular.utils import extend_schema
-from rest_framework import status
+from rest_framework import status, renderers
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -17,12 +17,23 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
 
     http_method_names = ['get', 'post', ]
+    renderer_classes = [renderers.TemplateHTMLRenderer]
+    template_name = 'usuarios/cadastro.html'
+
+    def list(self, request, **kwargs):
+        return Response()
 
 
 class LoginUsuario(APIView):
     permission_classes = [AllowAny, ]
     authentication_classes = [SessionAuthentication, ]
     serializer_class = LoginSerializer
+
+    renderer_classes = [renderers.TemplateHTMLRenderer]
+    template_name = 'usuarios/login.html'
+
+    def get(self, request):
+        return Response()
 
     @extend_schema(request=LoginSerializer)
     def post(self, request):
@@ -37,6 +48,12 @@ class LoginUsuario(APIView):
 class LogoutUsuario(APIView):
     permission_classes = [IsAuthenticated, ]
     authentication_classes = [SessionAuthentication, ]
+
+    renderer_classes = [renderers.TemplateHTMLRenderer]
+    template_name = 'usuarios/logout.html'
+
+    def get(self, request):
+        return Response()
 
     def post(self, request):
         usuario = request.user
