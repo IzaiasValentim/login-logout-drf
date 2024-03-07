@@ -35,12 +35,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Cors
+    'corsheaders',
     # DRF
     'rest_framework',
     # Swagger-UI
     'drf_spectacular',
     # Meus aplicativos:
     'usuarios',
+
 ]
 
 MIDDLEWARE = [
@@ -66,11 +69,15 @@ REST_FRAMEWORK = {
 }
 
 ROOT_URLCONF = 'api.urls'
+CSRF_TRUSTED_ORIGINS = ['http://localhost']
+CORS_ALLOW_CREDENTIALS = True
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
